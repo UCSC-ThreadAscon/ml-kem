@@ -18,7 +18,7 @@ if((CONFIG_EXPERIMENT EQUAL 3) OR (CONFIG_EXPERIMENT EQUAL 4))
   message("Building for the Delay Client and Server.")
   end_delimiter()
 
-  idf_component_register(SRC_DIRS "src" "src/delay_server" "src/delay_client"
+  idf_component_register(SRC_DIRS "src" "src/mlkem" "src/delay_server" "src/delay_client"
                          INCLUDE_DIRS "include")
 
 else()
@@ -27,7 +27,7 @@ else()
   message("Building for the Throughput and Packet Loss experiments.")
   end_delimiter()
 
-  idf_component_register(SRC_DIRS "src"
+  idf_component_register(SRC_DIRS "src" "src/mlkem"
                          INCLUDE_DIRS "include")
 
 endif()
