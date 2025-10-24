@@ -43,7 +43,7 @@ void app_main(void)
 
   /* WARNING: Test-only
    * Normally, you would want to seed a PRNG with trustworthy entropy here. */
-  // randombytes_reset();
+  randombytes_reset();
 
   printf("Generating keypair ... ");
 
