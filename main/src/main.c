@@ -2,6 +2,9 @@
 #include "tight_loop.h"
 #include "independent_variables.h"
 
+ // NOTE: `mlkem` must NOT be written in quotes.
+#define MLK_CONFIG_API_NAMESPACE_PREFIX crypto_kem
+#define MLK_CONFIG_API_PARAMETER_SET 512
 #include "mlkem/mlkem_native.h"
 
 #include "notrandombytes.h"

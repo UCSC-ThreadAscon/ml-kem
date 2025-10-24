@@ -19,6 +19,10 @@ if((CONFIG_EXPERIMENT EQUAL 3) OR (CONFIG_EXPERIMENT EQUAL 4))
   end_delimiter()
 
   idf_component_register(SRC_DIRS "src" "src/mlkem" "src/delay_server" "src/delay_client"
+                                  "src/mlkem/"
+                                  "src/mlkem/src/native"
+                                  "src/mlkem/src/fips202/"
+                                  "src/mlkem/src/fips202/native"
                          INCLUDE_DIRS "include")
 
 else()
@@ -28,6 +32,10 @@ else()
   end_delimiter()
 
   idf_component_register(SRC_DIRS "src" "src/mlkem"
-                         INCLUDE_DIRS "include")
+                         INCLUDE_DIRS "include"                                   
+                                  "src/mlkem/"
+                                  "src/mlkem/src/native"
+                                  "src/mlkem/src/fips202/"
+                                  "src/mlkem/src/fips202/native")
 
 endif()
