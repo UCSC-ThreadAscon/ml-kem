@@ -67,6 +67,10 @@
  *
  ******************************************************************************/
 
+ // NOTE: `mlkem` must NOT be wrriten in quotes.
+#define MLK_CONFIG_API_NAMESPACE_PREFIX mlkem
+#define MLK_CONFIG_API_PARAMETER_SET 512
+
 /******************************* Key sizes ************************************/
 
 /* Sizes of cryptographic material, per parameter set */
