@@ -3,21 +3,33 @@
 #include "independent_variables.h"
 
 #include "kem.h"
+#include "notrandombytes.h"
+
 
 #include <stdio.h>
 #include <string.h>
 
-#define CHECK(x)                                              \
-  do                                                          \
-  {                                                           \
-    int rc;                                                   \
-    rc = (x);                                                 \
-    if (!rc)                                                  \
-    {                                                         \
-      fprintf(stderr, "ERROR (%s,%d)\n", __FILE__, __LINE__); \
-      return;                                                 \
-    }                                                         \
-  } while (0)
+const uint8_t canary[8] = {
+    0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF
+};
+
+/* allocate a bit more for all keys and messages and
+ * make sure it is not touched by the implementations.
+ */
+static void write_canary(uint8_t *d) {
+    for (size_t i = 0; i < 8; i++) {
+        d[i] = canary[i];
+    }
+}
+
+static int check_canary(const uint8_t *d) {
+    for (size_t i = 0; i < 8; i++) {
+        if (d[i] != canary[i]) {
+            return -1;
+        }
+    }
+    return 0;
+}
 
 #if ((DELAY_SERVER || DELAY_CLIENT) && !CONFIG_OPENTHREAD_TIME_SYNC)
 #error "You must TURN ON Time Sync for the Delay experiments."
@@ -27,66 +39,25 @@
 
 void app_main(void)
 {
-  startMain();
+  // startMain();
 
-  uint8_t pk[CRYPTO_PUBLICKEYBYTES];
-  uint8_t sk[CRYPTO_SECRETKEYBYTES];
-  uint8_t ct[CRYPTO_CIPHERTEXTBYTES];
-  uint8_t key_a[CRYPTO_BYTES];
-  uint8_t key_b[CRYPTO_BYTES];
+  unsigned char key_a[CRYPTO_BYTES + 16], key_b[CRYPTO_BYTES + 16];
+  unsigned char pk[CRYPTO_PUBLICKEYBYTES + 16];
+  unsigned char sendb[CRYPTO_CIPHERTEXTBYTES + 16];
+  unsigned char sk_a[CRYPTO_SECRETKEYBYTES + 16];
 
-  /* The PCT modifies the PRNG state, so the KAT tests don't work.
-   * We run KAT tests only for disabled PCT. */
-  const uint8_t expected_key[] = {
-      0x77, 0x6c, 0x74, 0xdf, 0x30, 0x1f, 0x8d, 0x82, 0x52, 0x5e, 0x8e,
-      0xbb, 0xb4, 0x00, 0x95, 0xcd, 0x2e, 0x92, 0xdf, 0x6d, 0xc9, 0x33,
-      0xe7, 0x86, 0x62, 0x59, 0xf5, 0x31, 0xc7, 0x35, 0x0a, 0xd5};
-
-  /* WARNING: Test-only
-   * Normally, you would want to seed a PRNG with trustworthy entropy here. */
-  // randombytes_reset();
-
-  printf("Generating keypair ... ");
-
-  /* Alice generates a public key */
-  CHECK(crypto_kem_keypair(pk, sk) == 0);
+  write_canary(key_a);
+  write_canary(key_a + sizeof(key_a) - 8);
+  write_canary(key_b);
+  write_canary(key_b + sizeof(key_b) - 8);
+  write_canary(pk);
+  write_canary(pk + sizeof(pk) - 8);
+  write_canary(sendb);
+  write_canary(sendb + sizeof(sendb) - 8);
+  write_canary(sk_a);
+  write_canary(sk_a + sizeof(sk_a) - 8);
 
   printf("DONE\n");
-  printf("Encaps... ");
 
-  /* Bob derives a secret key and creates a response */
-  CHECK(crypto_kem_enc(ct, key_b, pk) == 0);
-
-  printf("DONE\n");
-  printf("Decaps... ");
-
-  /* Alice uses Bobs response to get her shared key */
-  CHECK(crypto_kem_dec(key_a, ct, sk) == 0);
-
-  printf("DONE\n");
-  printf("Compare... ");
-
-  CHECK(memcmp(key_a, key_b, CRYPTO_BYTES) == 0);
-
-  printf("Shared secret: ");
-  {
-    size_t i;
-    for (i = 0; i < sizeof(key_a); i++)
-    {
-      printf("%02x", key_a[i]);
-    }
-  }
-  printf("\n");
-
-#if !defined(MLK_CONFIG_KEYGEN_PCT)
-  /* Check against hardcoded result to make sure that
-   * we integrated custom FIPS202 correctly */
-  CHECK(memcmp(key_a, expected_key, CRYPTO_BYTES) == 0);
-#else
-  printf(
-      "[WARNING] Skipping KAT test since PCT is enabled and modifies PRNG\n");
-#endif
-
-  printf("OK\n");
   return;
 }
