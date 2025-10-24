@@ -1,0 +1,47 @@
+menu "UCSC Thread-ASCON Network Performance FTD"
+    config OPENTHREAD_AUTO_START
+        bool 'Enable the automatic start mode.'
+        default False
+        help
+            If enabled, the Openthread Device will create or connect to thread network with pre-configured
+            network parameters automatically. Otherwise, user need to configure Thread via CLI command manually.
+
+    config EXPERIMENT
+      int 'The network performance experiment to run.'
+      default 0
+      range 0 6
+      help
+        Set the flag to '0' to run no experiment (primarily used for debugging purposes).
+        Set the flag to '1' to run the Throughput Confirmable experiment.
+        Set the flag to '2' to run the Packet Loss Confirmable experiment.
+        Set the flag to '3' to run the Delay experiment, with the device acting as the SERVER.
+        Set the flag to '4' to run the Delay experiment, with the device acting as the CLIENT.
+        Set the flag to '5' to run the Throughput Observe (Non-Confirmable) experiment.
+        Set the flag to '6' to run the Packet Loss Observe (Non-Confirmable) experiment.
+
+    config TX_POWER
+      int 'Set the 802.15.4 TX power used by OpenThread.'
+      range -24 20
+      default 20
+      help
+          Set the 802.15.4 transmission power (in dBm) for OpenThread.
+          The recommended TX power values are 20 dBm, 9 dBm, 0 dBm, and -24 dBm.
+
+    config SERVER_IP_ADDRESS
+      string 'IP address of the CoAP server.'
+      help
+          Sets the IPv6 address of the server to establish a CoAP with for the
+          Throughput and Packet Loss Confirmable experiments.
+
+    config DELAY_SERVER_IP_ADDRESS
+      string 'The IP Address of the CoAP server for the delay test.'
+      help
+          Sets the IPv6 addres of the CoAP server to send packets to for the delay tests.
+
+    config EXPERIMENT_DEBUG
+      bool 'Toggles debugging print statements.'
+      default n
+      help
+        If on, turns on debugging statements that prints information about
+        individual packets sent and received.
+endmenu
