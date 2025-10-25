@@ -475,6 +475,8 @@ void poly_tomsg(uint8_t msg[MLKEM_INDCPA_MSGBYTES], const poly *a) {
     }
 }
 
+#include <stdio.h>
+
 /*************************************************
 * Name:        poly_noise_eta1
 *
@@ -490,10 +492,11 @@ void poly_tomsg(uint8_t msg[MLKEM_INDCPA_MSGBYTES], const poly *a) {
 *              - int add: flag to conditionally accumulate into r if add != 0
 **************************************************/
 void poly_noise_eta1(poly *r, const unsigned char *seed, unsigned char nonce, int add) {
-    unsigned char buf[MLKEM_ETA1 * MLKEM_N / 4];
+    printf("In poly_noise_eta1()\n");
+    // unsigned char buf[MLKEM_ETA1 * MLKEM_N / 4];
 
-    prf(buf, MLKEM_ETA1 * MLKEM_N / 4, seed, nonce);
-    poly_cbd_eta1(r, buf, add);
+    // prf(buf, MLKEM_ETA1 * MLKEM_N / 4, seed, nonce);
+    // poly_cbd_eta1(r, buf, add);
 }
 
 /*************************************************
