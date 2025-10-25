@@ -3,8 +3,8 @@
 #include "independent_variables.h"
 
 #include "kem.h"
-#include "notrandombytes.h"
 
+#include "esp_random.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -41,23 +41,14 @@ void app_main(void)
 {
   // startMain();
 
-  unsigned char key_a[CRYPTO_BYTES + 16], key_b[CRYPTO_BYTES + 16];
-  unsigned char pk[CRYPTO_PUBLICKEYBYTES + 16];
-  unsigned char sendb[CRYPTO_CIPHERTEXTBYTES + 16];
-  unsigned char sk_a[CRYPTO_SECRETKEYBYTES + 16];
+  unsigned char pk[MLKEM_PUBLICKEYBYTES];
+  unsigned char sk[MLKEM_SECRETKEYBYTES];
 
-  write_canary(key_a);
-  write_canary(key_a + sizeof(key_a) - 8);
-  write_canary(key_b);
-  write_canary(key_b + sizeof(key_b) - 8);
-  write_canary(pk);
-  write_canary(pk + sizeof(pk) - 8);
-  write_canary(sendb);
-  write_canary(sendb + sizeof(sendb) - 8);
-  write_canary(sk_a);
-  write_canary(sk_a + sizeof(sk_a) - 8);
+  esp_fill_random(pk, sizeof(pk));
+  esp_fill_random(sk, sizeof(sk));
+  crypto_kem_keypair(pk, sk);
 
-  printf("DONE\n");
+  printf("DONE key pair generation!\n");
 
   return;
 }

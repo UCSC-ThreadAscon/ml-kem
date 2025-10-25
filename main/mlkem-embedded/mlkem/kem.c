@@ -27,10 +27,10 @@ int crypto_kem_keypair_derand(uint8_t *pk,
                               uint8_t *sk,
                               const uint8_t *coins) {
     indcpa_keypair_derand(pk, sk, coins);
-    memcpy(sk + MLKEM_INDCPA_SECRETKEYBYTES, pk, MLKEM_PUBLICKEYBYTES);
-    hash_h(sk + MLKEM_SECRETKEYBYTES - 2 * MLKEM_SYMBYTES, pk, MLKEM_PUBLICKEYBYTES);
-    /* Value z for pseudo-random output on reject */
-    memcpy(sk + MLKEM_SECRETKEYBYTES - MLKEM_SYMBYTES, coins + MLKEM_SYMBYTES, MLKEM_SYMBYTES);
+    // memcpy(sk + MLKEM_INDCPA_SECRETKEYBYTES, pk, MLKEM_PUBLICKEYBYTES);
+    // hash_h(sk + MLKEM_SECRETKEYBYTES - 2 * MLKEM_SYMBYTES, pk, MLKEM_PUBLICKEYBYTES);
+    // /* Value z for pseudo-random output on reject */
+    // memcpy(sk + MLKEM_SECRETKEYBYTES - MLKEM_SYMBYTES, coins + MLKEM_SYMBYTES, MLKEM_SYMBYTES);
     return 0;
 }
 

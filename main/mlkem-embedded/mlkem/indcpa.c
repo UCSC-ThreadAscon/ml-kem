@@ -11,6 +11,8 @@
 #include "randombytes.h"
 #include "matacc.h"
 
+#include <stdio.h>
+
 /*************************************************
  * Name:        indcpa_keypair_derand
  *
@@ -27,6 +29,7 @@
 void indcpa_keypair_derand(uint8_t pk[MLKEM_INDCPA_PUBLICKEYBYTES],
                            uint8_t sk[MLKEM_INDCPA_SECRETKEYBYTES],
                            const uint8_t coins[MLKEM_SYMBYTES]) {
+    printf("In indcpa_keypair_derand()\n");
     unsigned int i;
     uint8_t buf[2 * MLKEM_SYMBYTES];
     const uint8_t *publicseed = buf;
@@ -37,26 +40,27 @@ void indcpa_keypair_derand(uint8_t pk[MLKEM_INDCPA_PUBLICKEYBYTES],
 
     hash_g(buf, coins, MLKEM_SYMBYTES);
 
+    // NOTE: THIS IS THE LINE CAUSING THE ESP32-H2 TO CRASH!
     for (i = 0; i < MLKEM_K; i++) {
         poly_getnoise_eta1(&skpv.vec[i], noiseseed, nonce++);
     }
 
-    polyvec_ntt(&skpv);
+    // polyvec_ntt(&skpv);
 
-    // matrix-vector multiplication
-    for (i = 0; i < MLKEM_K; i++) {
-        matacc(&pkp, &skpv, i, publicseed, 0);
+    // // matrix-vector multiplication
+    // for (i = 0; i < MLKEM_K; i++) {
+    //     matacc(&pkp, &skpv, i, publicseed, 0);
 
-        poly_invntt_tomont(&pkp);
-        poly_addnoise_eta1(&pkp, noiseseed, nonce++);
-        poly_ntt(&pkp);
-        poly_reduce(&pkp);
+    //     poly_invntt_tomont(&pkp);
+    //     poly_addnoise_eta1(&pkp, noiseseed, nonce++);
+    //     poly_ntt(&pkp);
+    //     poly_reduce(&pkp);
 
-        poly_tobytes(pk + i * MLKEM_POLYBYTES, &pkp);
-    }
+    //     poly_tobytes(pk + i * MLKEM_POLYBYTES, &pkp);
+    // }
 
-    polyvec_tobytes(sk, &skpv);
-    memcpy(pk + MLKEM_POLYVECBYTES, publicseed, MLKEM_SYMBYTES);
+    // polyvec_tobytes(sk, &skpv);
+    // memcpy(pk + MLKEM_POLYVECBYTES, publicseed, MLKEM_SYMBYTES);
 }
 
 /*************************************************
