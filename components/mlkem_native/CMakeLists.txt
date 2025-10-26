@@ -1,6 +1,3 @@
-# https://esp32.com/viewtopic.php?t=42080
-set(EXTRA_COMPONENT_DIRS "mlkem-native/mlkem")
-
 set(mlkem_native_dirs
     "mlkem-native/mlkem"
     "mlkem-native/mlkem/src"
