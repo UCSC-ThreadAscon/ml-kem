@@ -4,9 +4,9 @@
 
 #define MLK_CONFIG_PARAMETER_SET 512
 #define MLK_CONFIG_API_PARAMETER_SET MLK_CONFIG_PARAMETER_SET
-#define MLK_CONFIG_API_NAMESPACE_PREFIX mlkem
+#define MLK_CONFIG_API_NAMESPACE_PREFIX mlkem512
 
-#include "mlkem_native.h"
+#include "kem.h"
 #include "notrandombytes.h"
 
 #include <stdio.h>
