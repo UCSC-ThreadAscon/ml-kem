@@ -12,7 +12,5 @@ macro(end_delimiter)
 
 endmacro(end_delimiter)
 
-  idf_component_register(SRC_DIRS "src"
-                         INCLUDE_DIRS "include")
-
-endif()
+idf_component_register(SRC_DIRS "src"
+                        INCLUDE_DIRS "include")
