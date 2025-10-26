@@ -2,6 +2,9 @@
 #include "tight_loop.h"
 #include "independent_variables.h"
 
+#define MLK_CONFIG_PARAMETER_SET 512
+#define MLK_CONFIG_API_PARAMETER_SET MLK_CONFIG_PARAMETER_SET
+#define MLK_CONFIG_API_NAMESPACE_PREFIX crypto_kem
 #include "mlkem_native.h"
 #include "notrandombytes.h"
 
@@ -58,7 +61,7 @@ void app_main(void)
   printf("Generating keypair ... ");
 
   /* Alice generates a public key */
-  // CHECK(crypto_kem_keypair(pk, sk) == 0);
+  CHECK(crypto_kem_keypair(pk, sk) == 0);
 
   printf("DONE\n");
   return;
